@@ -26,7 +26,6 @@ export default function DeltaMenu (props) {
 
   const tx = window.translate
 
-  const isGroup = selectedChat && selectedChat.isGroup
   const screenContext = useContext(ScreenContext)
 
   let chatMenu = <div />
@@ -39,49 +38,55 @@ export default function DeltaMenu (props) {
   const onDeleteChat = () => openDeleteChatDialog(screenContext, selectedChat)
   const onUnblockContacts = () => screenContext.openDialog('UnblockContacts', {})
   const onContactRequests = () => chatStoreDispatch({ type: 'SELECT_CHAT', payload: C.DC_CHAT_ID_DEADDROP })
-  const logout = () => ipcRenderer.send('logout')
+  const logout = () => {
+    if (selectedChat) {
+      chatStoreDispatch({ type: 'UI_UNSELECT_CHAT' })
+    }
+    ipcRenderer.send('logout')
+  }
   const onEncrInfo = () => openEncryptionInfoDialog(screenContext, selectedChat)
 
-  if (selectedChat && !selectedChat.isDeaddrop) {
-    chatMenu = <div>
-      <Menu.Divider />
-      {showArchivedChats
+  if (selectedChat && selectedChat.id && !selectedChat.isDeaddrop) {
+    const {
+      isGroup,
+      selfInGroup,
+      isSelfTalk,
+      isDeviceChat
+    } = selectedChat
+
+    chatMenu = [
+      <Menu.Divider />,
+      showArchivedChats
         ? <MenuItem icon='export' text={tx('menu_unarchive_chat')}
           onClick={() => onArchiveChat(false)} />
         : <MenuItem icon='import' text={tx('menu_archive_chat')}
-          onClick={() => onArchiveChat(true)} />
-      }
+          onClick={() => onArchiveChat(true)} />,
       <MenuItem
         icon='delete'
         text={tx('menu_delete_chat')}
-        onClick={onDeleteChat} />
-      {!isGroup &&
+        onClick={onDeleteChat} />,
+      !isGroup && !isDeviceChat && <MenuItem
+        icon='lock'
+        text={tx('encryption_info_desktop')}
+        onClick={onEncrInfo} />,
+      isGroup && selfInGroup && <>
         <MenuItem
-          icon='lock'
-          text={tx('encryption_info_desktop')}
-          onClick={onEncrInfo} />
-      }
-      {isGroup && selectedChat.selfInGroup
-        ? (
-          <div>
-            <MenuItem
-              icon='edit'
-              text={tx('menu_edit_group')}
-              onClick={onEditGroup}
-            />
-            <MenuItem
-              icon='log-out' text={tx('menu_leave_group')}
-              onClick={onLeaveGroup}
-            />
-          </div>
-        ) : <MenuItem
-          icon='blocked-person'
-          text={tx('menu_block_contact')}
-          onClick={onBlockContact}
+          icon='edit'
+          text={tx('menu_edit_group')}
+          onClick={onEditGroup}
         />
-      }
+        <MenuItem
+          icon='log-out' text={tx('menu_leave_group')}
+          onClick={onLeaveGroup}
+        />
+      </>,
+      !isGroup && !(isSelfTalk || isDeviceChat) && <MenuItem
+        icon='blocked-person'
+        text={tx('menu_block_contact')}
+        onClick={onBlockContact}
+      />,
       <Menu.Divider />
-    </div>
+    ]
   } else {
     chatMenu = <Menu.Divider />
   }

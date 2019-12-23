@@ -194,6 +194,7 @@ export default function LoginScreen (props) {
     const message = tx('forget_login_confirmation_desktop')
     openDialog('ConfirmationDialog', {
       message,
+      confirmLabel: tx('remove_account'),
       cb: yes => { if (yes) sendToBackend('forgetLogin', login) }
     })
   }

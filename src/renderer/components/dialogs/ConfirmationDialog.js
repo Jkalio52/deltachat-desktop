@@ -18,8 +18,7 @@ export function confirmationDialogLegacy (message, opts, cb) {
 }
 
 export default function ConfirmationDialog (props) {
-  const { message, cb } = props
-  const yesIsDanger = props.yesIsDanger !== false
+  const { message, cancelLabel, confirmLabel, cb } = props
 
   const isOpen = !!message
   const tx = window.translate
@@ -43,19 +42,18 @@ export default function ConfirmationDialog (props) {
             className={Classes.DIALOG_FOOTER_ACTIONS}
             style={{ justifyContent: 'space-between', marginTop: '7px' }}
           >
-            <DeltaButtonDanger
-              noPadding
-              onClick={() => yesIsDanger ? onClick(true) : onClick(false)}
-            >
-              { yesIsDanger ? tx('yes') : tx('no') }
-            </DeltaButtonDanger>
             <DeltaButtonPrimary
               noPadding
-              onClick={() => yesIsDanger ? onClick(false) : onClick(true)}
-              style={{ marginLeft: '90px' }}
+              onClick={() => onClick(false)}
             >
-              { yesIsDanger ? tx('no') : tx('yes') }
+              {cancelLabel || tx('cancel')}
             </DeltaButtonPrimary>
+            <DeltaButtonDanger
+              noPadding
+              onClick={() => onClick(true)}
+            >
+              {confirmLabel || tx('yes')}
+            </DeltaButtonDanger>
           </div>
         </div>
       </div>

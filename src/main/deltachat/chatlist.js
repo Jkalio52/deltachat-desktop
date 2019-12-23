@@ -99,6 +99,8 @@ module.exports = class DCChatList extends SplitOut {
       freshMessageCounter: this._dc.getFreshMessageCount(chatId),
       isArchiveLink: chat.id === C.DC_CHAT_ID_ARCHIVED_LINK,
       contactIds,
+      isSelfTalk: chat.isSelfTalk,
+      isDeviceTalk: chat.isDeviceTalk,
       selfInGroup: isGroup && contactIds.indexOf(C.DC_CONTACT_ID_SELF) !== -1
     }
   }

@@ -55,5 +55,8 @@
   },
   "ask_send_file_desktop":{
     "message": "Send %s to %s?"
+  },
+  "remove_account": {
+    "message": "Remove account"
   }
 }
