@@ -25,6 +25,13 @@ module.exports = class DCChatList extends SplitOut {
     return chat
   }
 
+  /**
+   * @returns {number} chat id
+   */
+  getSelectedChatId () {
+    return this._controller._selectedChatId
+  }
+
   onChatModified (chatId) {
     // TODO: move event handling to store
     const chat = this.getFullChatById(chatId)
