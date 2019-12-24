@@ -103,10 +103,6 @@ function init (cwd, state, logHandler) {
     sendStateToRenderer()
   })
 
-  ipcMain.on('getMessage', (e, msgId) => {
-    e.returnValue = dcController.messageList.messageIdToJson(msgId)
-  })
-
   ipcMain.on('getMessageInfo', (e, msgId) => {
     main.send('MessageInfo', dcController.messageList.getMessageInfo(msgId))
   })
