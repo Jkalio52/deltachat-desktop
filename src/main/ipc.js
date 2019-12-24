@@ -103,10 +103,6 @@ function init (cwd, state, logHandler) {
     sendStateToRenderer()
   })
 
-  ipcMain.on('getMessageInfo', (e, msgId) => {
-    main.send('MessageInfo', dcController.messageList.getMessageInfo(msgId))
-  })
-
   // for the future:
   // ipcMain.on('markSeenMessages', (e, ids) => {
   //   this._dc.markSeenMessages(ids)
